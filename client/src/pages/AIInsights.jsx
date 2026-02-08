@@ -939,8 +939,9 @@ const ExistingUserInsights = ({ insights }) => (
           📋 Disclaimer
         </Text>
         <Text fontSize="sm">
-          This analysis is powered by Google Gemini AI and only suggestive in nature. Please consult with a
-          qualified financial advisor before making investment decisions.
+          This analysis is powered by Google Gemini AI and only suggestive in
+          nature. Please consult with a qualified financial advisor before
+          making investment decisions.
         </Text>
       </Box>
     </Alert>
