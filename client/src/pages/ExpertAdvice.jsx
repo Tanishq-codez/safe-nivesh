@@ -213,6 +213,7 @@ const ExpertAdvice = () => {
 
                 <Button
                   leftIcon={<FaGoogle />}
+                  variant="outline"
                   colorScheme="purple"
                   onClick={() => handleScheduleMeet(c)}
                 >
@@ -282,6 +283,7 @@ const ExpertAdvice = () => {
               Cancel
             </Button>
             <Button
+              variant="outline"
               colorScheme="purple"
               leftIcon={<FaGoogle />}
               onClick={handleSubmit}

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react"
+import { useState, useEffect } from "react";
 import {
   Box,
   Container,
@@ -29,108 +29,116 @@ import {
   Th,
   Td,
   useColorModeValue,
-} from "@chakra-ui/react"
-import { CheckCircleIcon, WarningIcon, InfoIcon } from "@chakra-ui/icons"
-import api from "../services/api"
+} from "@chakra-ui/react";
+import { CheckCircleIcon, WarningIcon, InfoIcon } from "@chakra-ui/icons";
+import api from "../services/api";
 
 const AIInsights = () => {
-  const [userType, setUserType] = useState(null)
+  const [userType, setUserType] = useState(null);
   const [answers, setAnswers] = useState({
     hasInsurance: "",
     hasEmergencyFund: "",
     monthlyInvestment: "",
     riskAppetite: "",
-    investmentHorizon: ""
-  })
+    investmentHorizon: "",
+  });
 
-  const [portfolioData, setPortfolioData] = useState(null)
-  const [analysisResult, setAnalysisResult] = useState(null)
-  const [insights, setInsights] = useState(null)
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState("")
+  const [portfolioData, setPortfolioData] = useState(null);
+  const [analysisResult, setAnalysisResult] = useState(null);
+  const [insights, setInsights] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
-  const warningBg = useColorModeValue("red.50", "red.900")
-  const successBg = useColorModeValue("green.50", "green.900")
-  const infoBg = useColorModeValue("blue.50", "blue.900")
+  const warningBg = useColorModeValue("red.50", "red.900");
+  const successBg = useColorModeValue("green.50", "green.900");
+  const infoBg = useColorModeValue("blue.50", "blue.900");
 
   /* ============================
      FETCH PORTFOLIO (EXISTING USER)
      ============================ */
   useEffect(() => {
     if (userType === "existing") {
-      setLoading(true)
+      setLoading(true);
       api
         .get("/portfolio/analyze")
         .then((res) => {
-          setPortfolioData(res.data)
-          setError("")
+          setPortfolioData(res.data);
+          setError("");
         })
         .catch((err) => {
-          setPortfolioData(null)
-          setError("Failed to fetch portfolio data. Please try again.")
+          setPortfolioData(null);
+          setError("Failed to fetch portfolio data. Please try again.");
         })
-        .finally(() => setLoading(false))
+        .finally(() => setLoading(false));
     }
-  }, [userType])
+  }, [userType]);
 
   /* ============================
      ANALYZE PORTFOLIO
      ============================ */
   const analyzePortfolio = async () => {
-    setLoading(true)
-    setError("")
-    setAnalysisResult(null)
-    setInsights(null)
+    setLoading(true);
+    setError("");
+    setAnalysisResult(null);
+    setInsights(null);
 
     try {
       // Get AI insights with analysis
       // Backend will fetch funds and perform detailed analysis automatically
-      const aiRes = await api.post("/ai/insights", {
-        userType: "existing"
-      }, {
-        timeout: 20000
-      })
+      const aiRes = await api.post(
+        "/ai/insights",
+        {
+          userType: "existing",
+        },
+        {
+          timeout: 20000,
+        },
+      );
 
-      console.log("AI Insights:", aiRes.data)
-      setInsights(aiRes.data)
+      console.log("AI Insights:", aiRes.data);
+      setInsights(aiRes.data);
     } catch (err) {
-      console.error("Error:", err)
+      console.error("Error:", err);
       setError(
         err?.response?.data?.message ||
-        "Unable to analyze portfolio. Please try again."
-      )
+          "Unable to analyze portfolio. Please try again.",
+      );
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   /* ============================
      GENERATE NEW INVESTOR INSIGHTS
      ============================ */
   const generateNewInvestorInsights = async () => {
-    setLoading(true)
-    setError("")
-    setInsights(null)
+    setLoading(true);
+    setError("");
+    setInsights(null);
 
     try {
-      const res = await api.post("/ai/insights", {
-        userType: "new",
-        answers
-      }, {
-        timeout: 20000
-      })
+      const res = await api.post(
+        "/ai/insights",
+        {
+          userType: "new",
+          answers,
+        },
+        {
+          timeout: 20000,
+        },
+      );
 
-      setInsights(res.data)
+      setInsights(res.data);
     } catch (err) {
-      console.error("AI Insights error:", err)
+      console.error("AI Insights error:", err);
       setError(
         err?.response?.data?.message ||
-        "Unable to generate insights. Please try again."
-      )
+          "Unable to generate insights. Please try again.",
+      );
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   /* ============================
      VALIDATION
@@ -140,12 +148,11 @@ const AIInsights = () => {
     answers.hasEmergencyFund &&
     answers.monthlyInvestment &&
     answers.riskAppetite &&
-    answers.investmentHorizon
+    answers.investmentHorizon;
 
   return (
     <Container maxW="container.xl" py={10}>
       <VStack spacing={8} align="stretch">
-
         {/* ERROR MESSAGE */}
         {error && (
           <Alert status="error" variant="left-accent">
@@ -196,7 +203,9 @@ const AIInsights = () => {
           <Card>
             <CardBody>
               <VStack spacing={6}>
-                <Heading size="md">Let's Build Your Investment Foundation</Heading>
+                <Heading size="md">
+                  Let's Build Your Investment Foundation
+                </Heading>
                 <Divider />
 
                 <Select
@@ -207,9 +216,15 @@ const AIInsights = () => {
                   }
                   size="lg"
                 >
-                  <option value="Yes, I have both Health and Life Insurance">Both Health and Life Insurance</option>
-                  <option value="Yes, I have Health Insurance">Health Insurance Only</option>
-                  <option value="Yes, I have Life Insurance">Life Insurance Only</option>
+                  <option value="Yes, I have both Health and Life Insurance">
+                    Both Health and Life Insurance
+                  </option>
+                  <option value="Yes, I have Health Insurance">
+                    Health Insurance Only
+                  </option>
+                  <option value="Yes, I have Life Insurance">
+                    Life Insurance Only
+                  </option>
                   <option value="no">None</option>
                 </Select>
 
@@ -219,7 +234,7 @@ const AIInsights = () => {
                   onChange={(e) =>
                     setAnswers({
                       ...answers,
-                      hasEmergencyFund: e.target.value
+                      hasEmergencyFund: e.target.value,
                     })
                   }
                   size="lg"
@@ -235,7 +250,7 @@ const AIInsights = () => {
                   onChange={(e) =>
                     setAnswers({
                       ...answers,
-                      monthlyInvestment: e.target.value
+                      monthlyInvestment: e.target.value,
                     })
                   }
                   size="lg"
@@ -250,8 +265,12 @@ const AIInsights = () => {
                   size="lg"
                 >
                   <option value="low">Low - I prefer stable returns</option>
-                  <option value="moderate">Moderate - Balance of growth and stability</option>
-                  <option value="high">High - I can handle volatility for growth</option>
+                  <option value="moderate">
+                    Moderate - Balance of growth and stability
+                  </option>
+                  <option value="high">
+                    High - I can handle volatility for growth
+                  </option>
                 </Select>
 
                 <Select
@@ -260,7 +279,7 @@ const AIInsights = () => {
                   onChange={(e) =>
                     setAnswers({
                       ...answers,
-                      investmentHorizon: e.target.value
+                      investmentHorizon: e.target.value,
                     })
                   }
                   size="lg"
@@ -283,7 +302,8 @@ const AIInsights = () => {
 
                 {!isNewUserReady && (
                   <Text fontSize="sm" color="gray.500">
-                    Please fill all fields to receive personalized investment guidance.
+                    Please fill all fields to receive personalized investment
+                    guidance.
                   </Text>
                 )}
               </VStack>
@@ -300,9 +320,7 @@ const AIInsights = () => {
               <VStack spacing={4} align="stretch">
                 <Heading size="md">Portfolio Analysis</Heading>
                 <Divider />
-                <Text>
-                  Get detailed insights on:
-                </Text>
+                <Text>Get detailed insights on:</Text>
                 <List spacing={2}>
                   <ListItem>
                     <ListIcon as={CheckCircleIcon} color="green.500" />
@@ -314,7 +332,8 @@ const AIInsights = () => {
                   </ListItem>
                   <ListItem>
                     <ListIcon as={CheckCircleIcon} color="green.500" />
-                    Impact analysis (30% in one sector = 20% portfolio loss if sector drops)
+                    Impact analysis (30% in one sector = 20% portfolio loss if
+                    sector drops)
                   </ListItem>
                   <ListItem>
                     <ListIcon as={CheckCircleIcon} color="green.500" />
@@ -379,16 +398,16 @@ const AIInsights = () => {
         )}
       </VStack>
     </Container>
-  )
-}
+  );
+};
 
 /* ============================
    PORTFOLIO ANALYSIS DISPLAY
    ============================ */
 const PortfolioAnalysisDisplay = ({ analysis }) => {
-  if (!analysis) return null
+  if (!analysis) return null;
 
-  const { summary, sectorAnalysis, companyAnalysis, warnings } = analysis
+  const { summary, sectorAnalysis, companyAnalysis, warnings } = analysis;
 
   return (
     <VStack spacing={6} align="stretch">
@@ -399,21 +418,19 @@ const PortfolioAnalysisDisplay = ({ analysis }) => {
           value={`₹${(summary.totalInvestment / 100000).toFixed(2)}L`}
           color="blue"
         />
-        <StatCard
-          label="Funds"
-          value={summary.fundCount}
-          color="purple"
-        />
+        <StatCard label="Funds" value={summary.fundCount} color="purple" />
         <StatCard
           label="Diversification Score"
           value={`${summary.diversificationScore}%`}
-          color={summary.diversificationScore > 70 ? "green" : summary.diversificationScore > 50 ? "orange" : "red"}
+          color={
+            summary.diversificationScore > 70
+              ? "green"
+              : summary.diversificationScore > 50
+                ? "orange"
+                : "red"
+          }
         />
-        <StatCard
-          label="Risk Level"
-          value={summary.riskLevel}
-          color="red"
-        />
+        <StatCard label="Risk Level" value={summary.riskLevel} color="red" />
       </SimpleGrid>
 
       {/* WARNINGS */}
@@ -421,7 +438,7 @@ const PortfolioAnalysisDisplay = ({ analysis }) => {
         <Card borderColor="red.300" borderLeftWidth={4}>
           <CardHeader>
             <Heading size="md" color="red.600">
-              ⚠️ Risk Alerts ({warnings.length})
+              Risk Alerts ({warnings.length})
             </Heading>
           </CardHeader>
           <CardBody>
@@ -459,9 +476,16 @@ const PortfolioAnalysisDisplay = ({ analysis }) => {
           <CardBody>
             <VStack spacing={3} align="stretch">
               {companyAnalysis.topHoldings.map((holding, idx) => (
-                <HStack key={idx} justify="space-between" borderBottomWidth={1} pb={2}>
+                <HStack
+                  key={idx}
+                  justify="space-between"
+                  borderBottomWidth={1}
+                  pb={2}
+                >
                   <Text fontWeight="medium">{holding.name}</Text>
-                  <Badge colorScheme={holding.percentage > 10 ? "red" : "green"}>
+                  <Badge
+                    colorScheme={holding.percentage > 10 ? "red" : "green"}
+                  >
                     {holding.percentage}%
                   </Badge>
                 </HStack>
@@ -471,19 +495,20 @@ const PortfolioAnalysisDisplay = ({ analysis }) => {
         </Card>
       )}
     </VStack>
-  )
-}
+  );
+};
 
 /* ============================
    WARNING CARD
    ============================ */
 const WarningCard = ({ warning }) => {
-  const severityColor = {
-    critical: "red",
-    high: "orange",
-    medium: "yellow",
-    low: "blue"
-  }[warning.severity] || "gray"
+  const severityColor =
+    {
+      critical: "red",
+      high: "orange",
+      medium: "yellow",
+      low: "blue",
+    }[warning.severity] || "gray";
 
   return (
     <Box
@@ -510,25 +535,31 @@ const WarningCard = ({ warning }) => {
         </VStack>
       )}
     </Box>
-  )
-}
+  );
+};
 
 /* ============================
    SECTOR BAR
    ============================ */
 const SectorBar = ({ sector }) => {
   const getColor = (value) => {
-    if (value > 40) return "red"
-    if (value > 30) return "orange"
-    if (value > 20) return "yellow"
-    return "green"
-  }
+    if (value > 40) return "red";
+    if (value > 30) return "orange";
+    if (value > 20) return "yellow";
+    return "green";
+  };
 
   return (
     <Box>
       <HStack justify="space-between" mb={1}>
-        <Text fontWeight="medium" fontSize="sm">{sector.name}</Text>
-        <Text fontSize="sm" fontWeight="bold" color={`${getColor(sector.value)}.600`}>
+        <Text fontWeight="medium" fontSize="sm">
+          {sector.name}
+        </Text>
+        <Text
+          fontSize="sm"
+          fontWeight="bold"
+          color={`${getColor(sector.value)}.600`}
+        >
           {sector.value}%
         </Text>
       </HStack>
@@ -539,8 +570,8 @@ const SectorBar = ({ sector }) => {
         rounded="full"
       />
     </Box>
-  )
-}
+  );
+};
 
 /* ============================
    STAT CARD
@@ -548,7 +579,12 @@ const SectorBar = ({ sector }) => {
 const StatCard = ({ label, value, color }) => (
   <Card bg={`${color}.50`} borderColor={`${color}.200`} borderWidth={1}>
     <CardBody>
-      <Text fontSize="xs" color="gray.600" textTransform="uppercase" letterSpacing="wide">
+      <Text
+        fontSize="xs"
+        color="gray.600"
+        textTransform="uppercase"
+        letterSpacing="wide"
+      >
         {label}
       </Text>
       <Text fontSize="2xl" fontWeight="bold" color={`${color}.700`} mt={2}>
@@ -556,7 +592,7 @@ const StatCard = ({ label, value, color }) => (
       </Text>
     </CardBody>
   </Card>
-)
+);
 
 /* ============================
    EXISTING USER INSIGHTS
@@ -566,7 +602,7 @@ const ExistingUserInsights = ({ insights }) => (
     {/* Portfolio Health */}
     <Card borderTopWidth={4} borderTopColor="blue.500">
       <CardHeader>
-        <Heading size="md">📊 Portfolio Health Summary</Heading>
+        <Heading size="md">Portfolio Health Summary</Heading>
       </CardHeader>
       <CardBody>
         <Text>{insights.portfolioHealth}</Text>
@@ -577,35 +613,42 @@ const ExistingUserInsights = ({ insights }) => (
     {insights.overlappingHoldings && (
       <Card borderTopWidth={4} borderTopColor="red.500">
         <CardHeader>
-          <Heading size="md">🔴 Overlapping Holdings (Concentration Risk)</Heading>
+          <Heading size="md">
+            🔴 Overlapping Holdings (Concentration Risk)
+          </Heading>
         </CardHeader>
         <CardBody>
           <Text mb={4}>{insights.overlappingHoldings}</Text>
           {/* Detailed table if available */}
-          {insights.overlappingSharesDetail && insights.overlappingSharesDetail.length > 0 && (
-            <Box overflowX="auto">
-              <Table variant="simple" size="sm">
-                <Thead>
-                  <Tr>
-                    <Th>Company</Th>
-                    <Th isNumeric>No. of Funds</Th>
-                    <Th>Funds</Th>
-                    <Th isNumeric>Total Exposure %</Th>
-                  </Tr>
-                </Thead>
-                <Tbody>
-                  {insights.overlappingSharesDetail.map((share, idx) => (
-                    <Tr key={idx}>
-                      <Td fontWeight="bold">{share.company}</Td>
-                      <Td isNumeric><Badge colorScheme="red">{share.numberOfFunds}</Badge></Td>
-                      <Td fontSize="sm">{share.funds.join(", ")}</Td>
-                      <Td isNumeric fontWeight="bold">{share.totalExposurePercent}%</Td>
+          {insights.overlappingSharesDetail &&
+            insights.overlappingSharesDetail.length > 0 && (
+              <Box overflowX="auto">
+                <Table variant="simple" size="sm">
+                  <Thead>
+                    <Tr>
+                      <Th>Company</Th>
+                      <Th isNumeric>No. of Funds</Th>
+                      <Th>Funds</Th>
+                      <Th isNumeric>Total Exposure %</Th>
                     </Tr>
-                  ))}
-                </Tbody>
-              </Table>
-            </Box>
-          )}
+                  </Thead>
+                  <Tbody>
+                    {insights.overlappingSharesDetail.map((share, idx) => (
+                      <Tr key={idx}>
+                        <Td fontWeight="bold">{share.company}</Td>
+                        <Td isNumeric>
+                          <Badge colorScheme="red">{share.numberOfFunds}</Badge>
+                        </Td>
+                        <Td fontSize="sm">{share.funds.join(", ")}</Td>
+                        <Td isNumeric fontWeight="bold">
+                          {share.totalExposurePercent}%
+                        </Td>
+                      </Tr>
+                    ))}
+                  </Tbody>
+                </Table>
+              </Box>
+            )}
         </CardBody>
       </Card>
     )}
@@ -619,30 +662,37 @@ const ExistingUserInsights = ({ insights }) => (
         <CardBody>
           <Text mb={4}>{insights.sectorCongestion}</Text>
           {/* Detailed sector table if available */}
-          {insights.overlappingSectorsDetail && insights.overlappingSectorsDetail.length > 0 && (
-            <Box overflowX="auto">
-              <Table variant="simple" size="sm">
-                <Thead>
-                  <Tr>
-                    <Th>Sector</Th>
-                    <Th isNumeric>No. of Funds</Th>
-                    <Th>Funds</Th>
-                    <Th isNumeric>Total Exposure %</Th>
-                  </Tr>
-                </Thead>
-                <Tbody>
-                  {insights.overlappingSectorsDetail.map((sector, idx) => (
-                    <Tr key={idx}>
-                      <Td fontWeight="bold">{sector.sector}</Td>
-                      <Td isNumeric><Badge colorScheme="orange">{sector.numberOfFunds}</Badge></Td>
-                      <Td fontSize="sm">{sector.funds.join(", ")}</Td>
-                      <Td isNumeric fontWeight="bold">{sector.totalExposurePercent}%</Td>
+          {insights.overlappingSectorsDetail &&
+            insights.overlappingSectorsDetail.length > 0 && (
+              <Box overflowX="auto">
+                <Table variant="simple" size="sm">
+                  <Thead>
+                    <Tr>
+                      <Th>Sector</Th>
+                      <Th isNumeric>No. of Funds</Th>
+                      <Th>Funds</Th>
+                      <Th isNumeric>Total Exposure %</Th>
                     </Tr>
-                  ))}
-                </Tbody>
-              </Table>
-            </Box>
-          )}
+                  </Thead>
+                  <Tbody>
+                    {insights.overlappingSectorsDetail.map((sector, idx) => (
+                      <Tr key={idx}>
+                        <Td fontWeight="bold">{sector.sector}</Td>
+                        <Td isNumeric>
+                          <Badge colorScheme="orange">
+                            {sector.numberOfFunds}
+                          </Badge>
+                        </Td>
+                        <Td fontSize="sm">{sector.funds.join(", ")}</Td>
+                        <Td isNumeric fontWeight="bold">
+                          {sector.totalExposurePercent}%
+                        </Td>
+                      </Tr>
+                    ))}
+                  </Tbody>
+                </Table>
+              </Box>
+            )}
         </CardBody>
       </Card>
     )}
@@ -661,12 +711,14 @@ const ExistingUserInsights = ({ insights }) => (
               <Box>
                 <SimpleGrid columns={2} spacing={4}>
                   <Box>
-                    <Text fontSize="sm" color="gray.600" mb={1}>Overall Score</Text>
+                    <Text fontSize="sm" color="gray.600" mb={1}>
+                      Overall Score
+                    </Text>
                     <HStack>
                       <Box>
-                        <Progress 
-                          value={insights.diversificationScoreDetail.overall} 
-                          size="lg" 
+                        <Progress
+                          value={insights.diversificationScoreDetail.overall}
+                          size="lg"
                           colorScheme="purple"
                           width="200px"
                         />
@@ -677,12 +729,18 @@ const ExistingUserInsights = ({ insights }) => (
                     </HStack>
                   </Box>
                   <Box bg="purple.50" p={3} rounded="md">
-                    <Text fontSize="sm" color="gray.600">Level</Text>
-                    <Badge 
+                    <Text fontSize="sm" color="gray.600">
+                      Level
+                    </Text>
+                    <Badge
                       colorScheme={
-                        insights.diversificationScoreDetail.overall >= 80 ? "green" :
-                        insights.diversificationScoreDetail.overall >= 60 ? "blue" :
-                        insights.diversificationScoreDetail.overall >= 40 ? "orange" : "red"
+                        insights.diversificationScoreDetail.overall >= 80
+                          ? "green"
+                          : insights.diversificationScoreDetail.overall >= 60
+                            ? "blue"
+                            : insights.diversificationScoreDetail.overall >= 40
+                              ? "orange"
+                              : "red"
                       }
                       fontSize="md"
                       p={2}
@@ -693,19 +751,33 @@ const ExistingUserInsights = ({ insights }) => (
                 </SimpleGrid>
                 {insights.diversificationScoreDetail.sectorDiversity && (
                   <Box mt={4}>
-                    <Text fontSize="sm" fontWeight="bold" mb={2}>Score Breakdown:</Text>
+                    <Text fontSize="sm" fontWeight="bold" mb={2}>
+                      Score Breakdown:
+                    </Text>
                     <VStack spacing={2} align="stretch">
                       <HStack justify="space-between">
                         <Text fontSize="sm">Sector Diversity</Text>
-                        <Text fontSize="sm" fontWeight="bold">{insights.diversificationScoreDetail.sectorDiversity}/30</Text>
+                        <Text fontSize="sm" fontWeight="bold">
+                          {insights.diversificationScoreDetail.sectorDiversity}
+                          /30
+                        </Text>
                       </HStack>
                       <HStack justify="space-between">
                         <Text fontSize="sm">Share Diversity</Text>
-                        <Text fontSize="sm" fontWeight="bold">{insights.diversificationScoreDetail.shareDiversity}/40</Text>
+                        <Text fontSize="sm" fontWeight="bold">
+                          {insights.diversificationScoreDetail.shareDiversity}
+                          /40
+                        </Text>
                       </HStack>
                       <HStack justify="space-between">
                         <Text fontSize="sm">Concentration Score</Text>
-                        <Text fontSize="sm" fontWeight="bold">{insights.diversificationScoreDetail.concentrationScore}/30</Text>
+                        <Text fontSize="sm" fontWeight="bold">
+                          {
+                            insights.diversificationScoreDetail
+                              .concentrationScore
+                          }
+                          /30
+                        </Text>
                       </HStack>
                     </VStack>
                   </Box>
@@ -721,14 +793,24 @@ const ExistingUserInsights = ({ insights }) => (
     {insights.riskWarnings && insights.riskWarnings.length > 0 && (
       <Card borderTopWidth={4} borderTopColor="red.500">
         <CardHeader>
-          <Heading size="md">⚠️ Risk Warnings</Heading>
+          <Heading size="md">Risk Warnings</Heading>
         </CardHeader>
         <CardBody>
           <VStack spacing={3} align="stretch">
             {insights.riskWarnings.map((warning, idx) => (
-              <Box key={idx} borderLeftWidth={4} borderLeftColor="red.500" pl={4} py={2}>
-                <Text fontWeight="bold" color="red.700">{warning.title}</Text>
-                <Text fontSize="sm" mt={1}>{warning.message}</Text>
+              <Box
+                key={idx}
+                borderLeftWidth={4}
+                borderLeftColor="red.500"
+                pl={4}
+                py={2}
+              >
+                <Text fontWeight="bold" color="red.700">
+                  {warning.title}
+                </Text>
+                <Text fontSize="sm" mt={1}>
+                  {warning.message}
+                </Text>
               </Box>
             ))}
           </VStack>
@@ -740,23 +822,42 @@ const ExistingUserInsights = ({ insights }) => (
     {insights.potentialSectors && insights.potentialSectors.length > 0 && (
       <Card borderTopWidth={4} borderTopColor="green.500">
         <CardHeader>
-          <Heading size="md">✨ Potential Sectors to Add (Build Diversification)</Heading>
+          <Heading size="md">
+            Potential Sectors to Add (Build Diversification)
+          </Heading>
         </CardHeader>
         <CardBody>
           <VStack spacing={3} align="stretch">
             {insights.potentialSectors.map((sector, idx) => (
-              <Box key={idx} p={3} bg="green.50" rounded="md" borderLeftWidth={3} borderLeftColor="green.500">
-                <Heading size="sm" color="green.700">{sector.sector}</Heading>
-                <Text fontSize="sm" mt={1} color="gray.700">{sector.reason}</Text>
-                {sector.expectedCharacteristics && sector.expectedCharacteristics.length > 0 && (
-                  <HStack mt={2} spacing={1} flexWrap="wrap">
-                    {sector.expectedCharacteristics.map((char, cidx) => (
-                      <Badge key={cidx} colorScheme="green" variant="outline" fontSize="xs">
-                        {char}
-                      </Badge>
-                    ))}
-                  </HStack>
-                )}
+              <Box
+                key={idx}
+                p={3}
+                bg="green.50"
+                rounded="md"
+                borderLeftWidth={3}
+                borderLeftColor="green.500"
+              >
+                <Heading size="sm" color="green.700">
+                  {sector.sector}
+                </Heading>
+                <Text fontSize="sm" mt={1} color="gray.700">
+                  {sector.reason}
+                </Text>
+                {sector.expectedCharacteristics &&
+                  sector.expectedCharacteristics.length > 0 && (
+                    <HStack mt={2} spacing={1} flexWrap="wrap">
+                      {sector.expectedCharacteristics.map((char, cidx) => (
+                        <Badge
+                          key={cidx}
+                          colorScheme="green"
+                          variant="outline"
+                          fontSize="xs"
+                        >
+                          {char}
+                        </Badge>
+                      ))}
+                    </HStack>
+                  )}
               </Box>
             ))}
           </VStack>
@@ -768,24 +869,40 @@ const ExistingUserInsights = ({ insights }) => (
     {insights.fundRecommendations && (
       <Card borderTopWidth={4} borderTopColor="cyan.500">
         <CardHeader>
-          <Heading size="md">🎯 Fund Recommendations for Diversification</Heading>
+          <Heading size="md">Fund Recommendations for Diversification</Heading>
         </CardHeader>
         <CardBody>
-          <Text mb={4}>{insights.fundRecommendations}</Text>
-          {insights.fundRecommendationsDetail && insights.fundRecommendationsDetail.length > 0 && (
-            <VStack spacing={4} align="stretch">
-              {insights.fundRecommendationsDetail.map((rec, idx) => (
-                <Box key={idx} p={4} bg="cyan.50" rounded="md" border="1px" borderColor="cyan.200">
-                  <Heading size="sm" color="cyan.700" mb={2}>{rec.sector}</Heading>
-                  <Text fontSize="sm" mb={2}><strong>Recommendation:</strong> {rec.recommendation}</Text>
-                  <Text fontSize="sm" mb={2}><strong>Rationale:</strong> {rec.rationale}</Text>
-                  <HStack spacing={2}>
-                    <Badge colorScheme="cyan">{rec.fundType}</Badge>
-                  </HStack>
-                </Box>
-              ))}
-            </VStack>
-          )}
+          <Text mb={4} color="white">
+            {insights.fundRecommendations}
+          </Text>
+          {insights.fundRecommendationsDetail &&
+            insights.fundRecommendationsDetail.length > 0 && (
+              <VStack spacing={4} align="stretch">
+                {insights.fundRecommendationsDetail.map((rec, idx) => (
+                  <Box
+                    key={idx}
+                    p={4}
+                    bg="white"
+                    rounded="md"
+                    border="1px"
+                    borderColor="green.200"
+                  >
+                    <Heading size="sm" color="black" mb={2}>
+                      {rec.sector}
+                    </Heading>
+                    <Text fontSize="sm" mb={2} color="black">
+                      <strong>Recommendation:</strong> {rec.recommendation}
+                    </Text>
+                    <Text fontSize="sm" mb={2} color="black">
+                      <strong>Rationale:</strong> {rec.rationale}
+                    </Text>
+                    <HStack spacing={2}>
+                      <Badge colorScheme="cyan">{rec.fundType}</Badge>
+                    </HStack>
+                  </Box>
+                ))}
+              </VStack>
+            )}
         </CardBody>
       </Card>
     )}
@@ -794,7 +911,7 @@ const ExistingUserInsights = ({ insights }) => (
     {insights.suggestedAdjustments && (
       <Card borderTopWidth={4} borderTopColor="blue.500">
         <CardHeader>
-          <Heading size="md">📝 Suggested Adjustments & Action Plan</Heading>
+          <Heading size="md">Suggested Adjustments & Action Plan</Heading>
         </CardHeader>
         <CardBody>
           <Text>{insights.suggestedAdjustments}</Text>
@@ -806,7 +923,7 @@ const ExistingUserInsights = ({ insights }) => (
     {insights.riskAlignment && (
       <Card borderTopWidth={4} borderTopColor="blue.500">
         <CardHeader>
-          <Heading size="md">🎯 Risk Profile Alignment</Heading>
+          <Heading size="md">Risk Profile Alignment</Heading>
         </CardHeader>
         <CardBody>
           <Text>{insights.riskAlignment}</Text>
@@ -818,14 +935,17 @@ const ExistingUserInsights = ({ insights }) => (
     <Alert status="info" borderRadius="md">
       <AlertIcon />
       <Box>
-        <Text fontWeight="bold" mb={2}>📋 Disclaimer</Text>
+        <Text fontWeight="bold" mb={2}>
+          📋 Disclaimer
+        </Text>
         <Text fontSize="sm">
-          This analysis is powered by Google Gemini AI and is for educational purposes only. It is not financial advice. Please consult with a qualified financial advisor before making investment decisions.
+          This analysis is powered by Google Gemini AI and only suggestive in nature. Please consult with a
+          qualified financial advisor before making investment decisions.
         </Text>
       </Box>
     </Alert>
   </VStack>
-)
+);
 
 /* ============================
    NEW USER INSIGHTS
@@ -862,7 +982,7 @@ const NewUserInsights = ({ insights }) => (
     {insights.investmentGuidance && (
       <Card borderTopWidth={4} borderTopColor="blue.500">
         <CardHeader>
-          <Heading size="md">🎯 Investment Guidance</Heading>
+          <Heading size="md">Investment Guidance</Heading>
         </CardHeader>
         <CardBody>
           <Text>{insights.investmentGuidance}</Text>
@@ -881,7 +1001,7 @@ const NewUserInsights = ({ insights }) => (
       </Card>
     )}
   </VStack>
-)
+);
 
 /* ============================
    SCENARIO BOX
@@ -900,6 +1020,6 @@ const ScenarioBox = ({ scenario, status }) => (
       </Text>
     </CardBody>
   </Card>
-)
+);
 
-export default AIInsights
+export default AIInsights;
